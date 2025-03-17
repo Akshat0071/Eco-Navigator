@@ -2,6 +2,7 @@
 import React from 'react';
 import { Button } from '@/components/ui/button';
 import { Bike, Droplet, Leaf, LineChart } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 const Hero: React.FC = () => {
   return (
@@ -34,11 +35,22 @@ const Hero: React.FC = () => {
           </div>
 
           <div className="flex flex-col sm:flex-row justify-center lg:justify-start space-y-4 sm:space-y-0 sm:space-x-4">
-            <Button className="bg-eco-500 hover:bg-eco-600 text-white rounded-full px-8 py-6 text-lg font-medium shadow-lg hover:shadow-xl transition-all hover:-translate-y-1 duration-300">
-              Get Started
+            <Button 
+              className="bg-eco-500 hover:bg-eco-600 text-white rounded-full px-8 py-6 text-lg font-medium shadow-lg hover:shadow-xl transition-all hover:-translate-y-1 duration-300"
+              asChild
+            >
+              <Link to="/sign-up">
+                Get Started
+              </Link>
             </Button>
-            <Button variant="outline" className="border-eco-500 text-eco-500 hover:bg-eco-500/10 rounded-full px-8 py-6 text-lg font-medium transition-all hover:-translate-y-1 duration-300">
-              Track My Progress
+            <Button 
+              variant="outline" 
+              className="border-eco-500 text-eco-500 hover:bg-eco-500/10 rounded-full px-8 py-6 text-lg font-medium transition-all hover:-translate-y-1 duration-300"
+              asChild
+            >
+              <Link to="/dashboard">
+                Track My Progress
+              </Link>
             </Button>
           </div>
           

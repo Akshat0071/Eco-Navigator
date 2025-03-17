@@ -3,10 +3,12 @@ import React, { useState, useEffect } from 'react';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { Leaf, Menu, X } from 'lucide-react';
+import { Link, useLocation } from 'react-router-dom';
 
 const Navbar: React.FC = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const location = useLocation();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -32,10 +34,10 @@ const Navbar: React.FC = () => {
     >
       <div className="container mx-auto">
         <div className="flex items-center justify-between">
-          <a href="/" className="flex items-center space-x-2">
+          <Link to="/" className="flex items-center space-x-2">
             <Leaf className="h-8 w-8 text-eco-500" />
             <span className="text-2xl font-display font-bold bg-gradient-to-r from-eco-600 to-eco-400 bg-clip-text text-transparent">Sustainify</span>
-          </a>
+          </Link>
 
           {/* Desktop Navigation */}
           <ul className="hidden md:flex items-center space-x-8">
@@ -64,13 +66,24 @@ const Navbar: React.FC = () => {
               </a>
             </li>
             <li>
-              <Button className="bg-eco-500 hover:bg-eco-600 text-white rounded-full transition-all px-6">
-                Login
+              <Button 
+                className="bg-eco-500 hover:bg-eco-600 text-white rounded-full transition-all px-6"
+                asChild
+              >
+                <Link to="/login">
+                  Login
+                </Link>
               </Button>
             </li>
             <li>
-              <Button variant="outline" className="border-eco-500 text-eco-500 hover:bg-eco-500/10 rounded-full transition-all px-6">
-                Sign Up
+              <Button 
+                variant="outline" 
+                className="border-eco-500 text-eco-500 hover:bg-eco-500/10 rounded-full transition-all px-6"
+                asChild
+              >
+                <Link to="/sign-up">
+                  Sign Up
+                </Link>
               </Button>
             </li>
           </ul>
@@ -127,13 +140,26 @@ const Navbar: React.FC = () => {
               </a>
             </li>
             <li className="pt-2">
-              <Button className="w-full bg-eco-500 hover:bg-eco-600 text-white rounded-full transition-all">
-                Login
+              <Button 
+                className="w-full bg-eco-500 hover:bg-eco-600 text-white rounded-full transition-all"
+                asChild
+                onClick={() => setIsMobileMenuOpen(false)}
+              >
+                <Link to="/login">
+                  Login
+                </Link>
               </Button>
             </li>
             <li>
-              <Button variant="outline" className="w-full border-eco-500 text-eco-500 hover:bg-eco-500/10 rounded-full transition-all">
-                Sign Up
+              <Button 
+                variant="outline" 
+                className="w-full border-eco-500 text-eco-500 hover:bg-eco-500/10 rounded-full transition-all"
+                asChild
+                onClick={() => setIsMobileMenuOpen(false)}
+              >
+                <Link to="/sign-up">
+                  Sign Up
+                </Link>
               </Button>
             </li>
           </ul>
