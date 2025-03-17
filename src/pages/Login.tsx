@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
@@ -12,6 +11,8 @@ import { toast } from 'sonner';
 import { Eye, EyeOff, Mail, KeyRound, Loader2 } from 'lucide-react';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
+import { validateUser } from '@/services/userService';
+import { useAuth } from '@/contexts/AuthContext';
 
 const loginSchema = z.object({
   email: z.string().email({ message: 'Please enter a valid email address' }),
@@ -25,6 +26,7 @@ const Login: React.FC = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
+  const { login } = useAuth();
   
   const form = useForm<LoginFormValues>({
     resolver: zodResolver(loginSchema),
@@ -38,14 +40,18 @@ const Login: React.FC = () => {
   const onSubmit = async (data: LoginFormValues) => {
     setIsLoading(true);
     
-    // This is a mock authentication flow
-    // In a real app, you would call your authentication API
     try {
-      // Simulating API call delay
-      await new Promise(resolve => setTimeout(resolve, 1500));
+      // Authenticate with MongoDB
+      const user = await validateUser(data.email, data.password);
       
-      // For demo purposes, pretend login was successful
-      console.log('Login data:', data);
+      if (!user) {
+        toast.error('Invalid email or password. Please try again.');
+        setIsLoading(false);
+        return;
+      }
+      
+      // If remember me is checked, we'll handle that in the login function
+      login(user);
       
       toast.success('Successfully logged in!');
       navigate('/dashboard');

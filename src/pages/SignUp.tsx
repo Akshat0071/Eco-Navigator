@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
@@ -13,6 +12,8 @@ import { Eye, EyeOff, Mail, KeyRound, User, Loader2, Info } from 'lucide-react';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { createUser } from '@/services/userService';
+import { useAuth } from '@/contexts/AuthContext';
 
 const signUpSchema = z.object({
   name: z.string().min(2, { message: 'Name must be at least 2 characters' }),
@@ -39,6 +40,7 @@ const SignUp: React.FC = () => {
   const [showMfaDialog, setShowMfaDialog] = useState(false);
   const [mfaCode, setMfaCode] = useState('');
   const navigate = useNavigate();
+  const { login } = useAuth();
   
   const form = useForm<SignUpFormValues>({
     resolver: zodResolver(signUpSchema),
@@ -54,19 +56,19 @@ const SignUp: React.FC = () => {
   const onSubmit = async (data: SignUpFormValues) => {
     setIsLoading(true);
     
-    // This is a mock signup flow
-    // In a real app, you would call your authentication API
     try {
-      // Simulating API call delay
-      await new Promise(resolve => setTimeout(resolve, 1500));
+      const newUser = await createUser({
+        name: data.name,
+        email: data.email,
+        password: data.password,
+      });
       
-      console.log('Signup data:', data);
+      console.log('User created:', newUser);
       
-      // Show MFA dialog for 2FA demo
       setShowMfaDialog(true);
-    } catch (error) {
+    } catch (error: any) {
       console.error('Signup error:', error);
-      toast.error('Signup failed. Please try again.');
+      toast.error(error.message || 'Signup failed. Please try again.');
       setIsLoading(false);
     }
   };
@@ -78,12 +80,19 @@ const SignUp: React.FC = () => {
     }
     
     try {
-      // Simulate verification
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      const { db } = await import('../services/mongodb').then(m => m.connectToDatabase());
+      const user = await db.collection('users').findOne({ email: form.getValues().email });
+      
+      if (user) {
+        login(user);
+      }
       
       setShowMfaDialog(false);
       toast.success('Account created successfully!');
       navigate('/dashboard');
+    } catch (error) {
+      console.error('MFA verification error:', error);
+      toast.error('Verification failed. Please try again.');
     } finally {
       setIsLoading(false);
     }
@@ -314,7 +323,6 @@ const SignUp: React.FC = () => {
       
       <Footer />
       
-      {/* MFA Dialog for Two-Factor Authentication */}
       <Dialog open={showMfaDialog} onOpenChange={setShowMfaDialog}>
         <DialogContent>
           <DialogHeader>
