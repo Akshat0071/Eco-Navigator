@@ -12,7 +12,7 @@ import { Eye, EyeOff, Mail, KeyRound, User, Loader2, Info } from 'lucide-react';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
-import { createUser } from '@/services/userService';
+import { createUser, User as UserType } from '@/services/userService';
 import { useAuth } from '@/contexts/AuthContext';
 
 const signUpSchema = z.object({
@@ -81,10 +81,19 @@ const SignUp: React.FC = () => {
     
     try {
       const { db } = await import('../services/mongodb').then(m => m.connectToDatabase());
-      const user = await db.collection('users').findOne({ email: form.getValues().email });
+      const userDoc = await db.collection('users').findOne({ email: form.getValues().email });
       
-      if (user) {
-        login(user);
+      if (userDoc) {
+        const userData: UserType = {
+          _id: userDoc._id?.toString(),
+          name: userDoc.name,
+          email: userDoc.email,
+          password: userDoc.password,
+          createdAt: userDoc.createdAt,
+          updatedAt: userDoc.updatedAt
+        };
+        
+        login(userData);
       }
       
       setShowMfaDialog(false);
