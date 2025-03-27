@@ -10,7 +10,6 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 import { Eye, EyeOff, Mail, KeyRound, Loader2 } from 'lucide-react';
-import { validateUser } from '@/services/userService';
 import { useAuth } from '@/contexts/AuthContext';
 
 const loginSchema = z.object({
@@ -44,17 +43,17 @@ const LoginForm: React.FC<LoginFormProps> = ({ onLoginSuccess }) => {
     setIsLoading(true);
     
     try {
-      // Authenticate with MongoDB
-      const user = await validateUser(data.email, data.password);
+      // For demo purposes, we'll simulate a successful login
+      const mockUser = {
+        _id: 'demo-user-id',
+        name: 'Demo User',
+        email: data.email,
+        createdAt: new Date(),
+        updatedAt: new Date()
+      };
       
-      if (!user) {
-        toast.error('Invalid email or password. Please try again.');
-        setIsLoading(false);
-        return;
-      }
-      
-      // If remember me is checked, we'll handle that in the login function
-      login(user);
+      // Login the user
+      login(mockUser);
       
       toast.success('Successfully logged in!');
       

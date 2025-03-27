@@ -7,7 +7,7 @@ import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } f
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Info } from 'lucide-react';
-import { User as UserType } from '@/services/userService';
+import { User } from '@/services/userService';
 import { SignUpFormValues } from './SignUpForm';
 
 interface MFAVerificationDialogProps {
@@ -37,21 +37,20 @@ const MFAVerificationDialog: React.FC<MFAVerificationDialogProps> = ({
     setIsVerifying(true);
     
     try {
-      const { db } = await import('../../services/mongodb').then(m => m.connectToDatabase());
-      const userDoc = await db.collection('users').findOne({ email: formValues.email });
+      // For demo purposes, we're simulating a successful verification
+      // In a real app, you would verify the code with your backend
       
-      if (userDoc) {
-        const userData: UserType = {
-          _id: userDoc._id?.toString(),
-          name: userDoc.name,
-          email: userDoc.email,
-          password: userDoc.password,
-          createdAt: userDoc.createdAt,
-          updatedAt: userDoc.updatedAt
-        };
-        
-        login(userData);
-      }
+      // Create a mock user for demo purposes
+      const mockUser: User = {
+        _id: 'demo-user-id',
+        name: formValues.name,
+        email: formValues.email,
+        password: '', // We don't store the password in client-side
+        createdAt: new Date(),
+        updatedAt: new Date()
+      };
+      
+      login(mockUser);
       
       onOpenChange(false);
       toast.success('Account created successfully!');
