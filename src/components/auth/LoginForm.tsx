@@ -48,6 +48,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ onLoginSuccess }) => {
         _id: 'demo-user-id',
         name: 'Demo User',
         email: data.email,
+        password: '', // Adding the required password property
         createdAt: new Date(),
         updatedAt: new Date()
       };

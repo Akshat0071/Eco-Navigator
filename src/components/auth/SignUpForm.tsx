@@ -65,6 +65,7 @@ const SignUpForm: React.FC<SignUpFormProps> = ({ onSignUpSuccess }) => {
     } catch (error: any) {
       console.error('Signup error:', error);
       toast.error(error.message || 'Signup failed. Please try again.');
+    } finally {
       setIsLoading(false);
     }
   };

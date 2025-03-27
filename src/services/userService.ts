@@ -1,51 +1,47 @@
 
-import bcrypt from 'bcryptjs';
-import { connectToDatabase } from './mongodb';
+// This is a mock implementation for client-side use only
+// In a real app, these operations would be performed on a server
 
 export type User = {
   _id?: string;
   name: string;
   email: string;
-  password: string;
+  password: string; // This would normally be hashed
   createdAt: Date;
   updatedAt: Date;
 };
 
+// Mock user storage (this is only for demonstration purposes)
+const users: User[] = [];
+
 export async function createUser(userData: Omit<User, '_id' | 'createdAt' | 'updatedAt'>): Promise<User> {
-  const { db } = await connectToDatabase();
-  const collection = db.collection<User>('users');
-  
   // Check if user already exists
-  const existingUser = await collection.findOne({ email: userData.email });
+  const existingUser = users.find(user => user.email === userData.email);
   if (existingUser) {
     throw new Error('User with this email already exists');
   }
   
-  // Hash the password
-  const salt = await bcrypt.genSalt(10);
-  const hashedPassword = await bcrypt.hash(userData.password, salt);
+  // In a real app, we would hash the password here
+  // For demo purposes, we're just storing it as plain text
   
   const now = new Date();
   const newUser: User = {
     ...userData,
-    password: hashedPassword,
+    _id: crypto.randomUUID(),
     createdAt: now,
     updatedAt: now
   };
   
-  const result = await collection.insertOne(newUser as any);
+  // Add to our mock storage
+  users.push(newUser);
   
-  return {
-    ...newUser,
-    _id: result.insertedId.toString()
-  };
+  console.log('Created mock user:', newUser);
+  
+  return newUser;
 }
 
 export async function getUserByEmail(email: string): Promise<User | null> {
-  const { db } = await connectToDatabase();
-  const collection = db.collection<User>('users');
-  
-  return collection.findOne({ email });
+  return users.find(user => user.email === email) || null;
 }
 
 export async function validateUser(email: string, password: string): Promise<User | null> {
@@ -55,7 +51,9 @@ export async function validateUser(email: string, password: string): Promise<Use
     return null;
   }
   
-  const isPasswordValid = await bcrypt.compare(password, user.password);
+  // In a real app, we would compare hashed passwords
+  // For demo purposes, we're just comparing plain text
+  const isPasswordValid = user.password === password;
   
   if (!isPasswordValid) {
     return null;

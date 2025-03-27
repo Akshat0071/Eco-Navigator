@@ -1,39 +1,31 @@
 
-import { MongoClient, Db, ObjectId } from 'mongodb';
+// This is a mock implementation for client-side use
+// In a real app, these MongoDB operations would be performed on the server
 
-// Connection URL
-const uri = process.env.MONGODB_URI || 'mongodb://localhost:27017';
-const dbName = 'sustainify';
+import { ObjectId } from 'mongodb';
 
-let cachedClient: MongoClient | null = null;
-let cachedDb: Db | null = null;
-
-export async function connectToDatabase(): Promise<{ client: MongoClient; db: Db }> {
-  // If we already have a connection, use it
-  if (cachedClient && cachedDb) {
-    return { client: cachedClient, db: cachedDb };
-  }
-
-  // If no connection, create a new one
-  const client = new MongoClient(uri);
-  
-  try {
-    await client.connect();
-    console.log('Connected to MongoDB');
-    
-    const db = client.db(dbName);
-    
-    // Cache the client and db connection
-    cachedClient = client;
-    cachedDb = db;
-    
-    return { client, db };
-  } catch (error) {
-    console.error('MongoDB connection error:', error);
-    throw error;
-  }
+// We're creating a simple mock of ObjectId for client-side use
+export function generateObjectId() {
+  return crypto.randomUUID();
 }
 
-export function generateObjectId() {
-  return new ObjectId().toString();
+// This is a mock implementation that doesn't actually connect to MongoDB
+// It just returns an object with the expected shape
+export async function connectToDatabase() {
+  console.log('Mock MongoDB connection for client-side');
+  
+  // Return a mock client and db that won't actually be used
+  return {
+    client: {
+      close: () => console.log('Mock client closed')
+    },
+    db: {
+      collection: (name: string) => ({
+        findOne: async () => null,
+        insertOne: async () => ({ insertedId: generateObjectId() }),
+        find: async () => [],
+        // Add other collection methods as needed
+      })
+    }
+  };
 }
