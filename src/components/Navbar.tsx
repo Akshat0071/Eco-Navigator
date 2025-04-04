@@ -1,14 +1,22 @@
-
 import React, { useState, useEffect } from 'react';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
-import { Leaf, Menu, X } from 'lucide-react';
-import { Link, useLocation } from 'react-router-dom';
+import { Leaf, Menu, X, Moon, Sun, User, LogOut, Settings } from 'lucide-react';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { useAuth } from "@/contexts/AuthContext";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 const Navbar: React.FC = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const location = useLocation();
+  const navigate = useNavigate();
+  const { user, logout, theme, toggleTheme } = useAuth();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -21,6 +29,11 @@ const Navbar: React.FC = () => {
 
   const toggleMobileMenu = () => {
     setIsMobileMenuOpen(!isMobileMenuOpen);
+  };
+
+  const handleLogout = () => {
+    logout();
+    navigate("/");
   };
 
   return (
@@ -36,7 +49,7 @@ const Navbar: React.FC = () => {
         <div className="flex items-center justify-between">
           <Link to="/" className="flex items-center space-x-2">
             <Leaf className="h-8 w-8 text-eco-500" />
-            <span className="text-2xl font-display font-bold bg-gradient-to-r from-eco-600 to-eco-400 bg-clip-text text-transparent">Sustainify</span>
+            <span className="text-2xl font-display font-bold bg-gradient-to-r from-eco-600 to-eco-400 bg-clip-text text-transparent">Eco-Navigator</span>
           </Link>
 
           {/* Desktop Navigation */}
@@ -65,28 +78,52 @@ const Navbar: React.FC = () => {
                 Testimonials
               </a>
             </li>
-            <li>
-              <Button 
-                className="bg-eco-500 hover:bg-eco-600 text-white rounded-full transition-all px-6"
-                asChild
-              >
-                <Link to="/login">
-                  Login
-                </Link>
-              </Button>
-            </li>
-            <li>
-              <Button 
-                variant="outline" 
-                className="border-eco-500 text-eco-500 hover:bg-eco-500/10 rounded-full transition-all px-6"
-                asChild
-              >
-                <Link to="/sign-up">
-                  Sign Up
-                </Link>
-              </Button>
-            </li>
           </ul>
+
+          {/* Theme Toggle */}
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={toggleTheme}
+            className="text-gray-700 dark:text-gray-200 hover:text-eco-600 dark:hover:text-eco-400"
+          >
+            {theme === 'dark' ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
+          </Button>
+
+          {/* Auth Buttons / User Menu */}
+          {user ? (
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="ghost" className="relative h-8 w-8 rounded-full">
+                  <div className="flex items-center justify-center h-8 w-8 rounded-full bg-eco-100 dark:bg-eco-900">
+                    <User className="h-5 w-5 text-eco-600 dark:text-eco-400" />
+                  </div>
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" className="w-56">
+                <div className="px-2 py-1.5 text-sm font-medium text-gray-700 dark:text-gray-200">
+                  Hi, {user.name}
+                </div>
+                <DropdownMenuItem onClick={() => navigate("/profile")}>
+                  <Settings className="mr-2 h-4 w-4" />
+                  Profile Settings
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={handleLogout}>
+                  <LogOut className="mr-2 h-4 w-4" />
+                  Logout
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          ) : (
+            <div className="flex items-center space-x-4">
+              <Link to="/login">
+                <Button variant="ghost">Log in</Button>
+              </Link>
+              <Link to="/signup">
+                <Button>Sign up</Button>
+              </Link>
+            </div>
+          )}
 
           {/* Mobile Menu Button */}
           <button

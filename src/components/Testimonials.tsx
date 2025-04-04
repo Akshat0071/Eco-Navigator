@@ -1,4 +1,3 @@
-
 import React from 'react';
 import TestimonialCard from './TestimonialCard';
 
@@ -11,11 +10,11 @@ const Testimonials: React.FC = () => {
 
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center max-w-3xl mx-auto mb-16 animate-slide-up">
-          <h2 className="font-display font-bold mb-4">
-            Success <span className="heading-gradient">Stories</span> from Our Community
+          <h2 className="text-3xl font-bold text-center mb-8">
+            See how Eco-Navigator has helped people transform their health and environmental impact
           </h2>
           <p className="text-lg text-muted-foreground">
-            See how Sustainify has helped people transform their health and environmental impact 
+            See how Eco-Navigator has helped people transform their health and environmental impact 
             through simple daily habits and smart tracking.
           </p>
         </div>
@@ -48,7 +47,7 @@ const Testimonials: React.FC = () => {
           <TestimonialCard 
             name="Michael Torres"
             role="Fitness Coach"
-            content="I recommend Sustainify to all my clients. The ability to track both fitness progress and environmental impact in one app has been revolutionary for holistic health."
+            content="I recommend Eco-Navigator to all my clients. The ability to track both fitness progress and environmental impact in one app has been revolutionary for holistic health."
             rating={5}
             imageSrc="https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=256&q=80"
           />
@@ -64,7 +63,7 @@ const Testimonials: React.FC = () => {
           <TestimonialCard 
             name="James Wilson"
             role="Tech Professional"
-            content="As someone who travels frequently for work, I appreciate how Sustainify helps me maintain healthy habits and minimize my environmental impact even when I'm on the road."
+            content="As someone who travels frequently for work, I appreciate how Eco-Navigator helps me maintain healthy habits and minimize my environmental impact even when I'm on the road."
             rating={4}
             imageSrc="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=256&q=80"
           />

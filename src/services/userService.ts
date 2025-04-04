@@ -1,15 +1,15 @@
-
 // This is a mock implementation for client-side use only
 // In a real app, these operations would be performed on a server
 
-export type User = {
-  _id?: string;
-  name: string;
+export interface User {
+  _id: string;
   email: string;
-  password: string; // This would normally be hashed
+  name: string;
+  avatar_url?: string;
+  provider?: 'google' | 'github';
   createdAt: Date;
   updatedAt: Date;
-};
+}
 
 // Mock user storage (this is only for demonstration purposes)
 const users: User[] = [];
@@ -49,6 +49,11 @@ export async function validateUser(email: string, password: string): Promise<Use
   
   if (!user) {
     return null;
+  }
+  
+  // Skip password validation for social auth users
+  if (user.provider) {
+    return user;
   }
   
   // In a real app, we would compare hashed passwords

@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Button } from '@/components/ui/button';
 import { Leaf, Mail, Instagram, Twitter, Facebook, Youtube, ArrowRight } from 'lucide-react';
@@ -69,7 +68,7 @@ const Footer: React.FC = () => {
           <div>
             <div className="flex items-center mb-6">
               <Leaf className="h-8 w-8 text-eco-500 mr-2" />
-              <span className="text-2xl font-display font-bold bg-gradient-to-r from-eco-600 to-eco-400 bg-clip-text text-transparent">Sustainify</span>
+              <span className="text-2xl font-display font-bold bg-gradient-to-r from-eco-600 to-eco-400 bg-clip-text text-transparent">Eco-Navigator</span>
             </div>
             <p className="text-muted-foreground mb-6">
               The all-in-one platform for tracking your health, sustainability efforts, 
@@ -116,9 +115,9 @@ const Footer: React.FC = () => {
           <div>
             <h4 className="font-semibold text-lg mb-6">Contact</h4>
             <div className="space-y-4">
-              <a href="mailto:hello@sustainify.com" className="flex items-center text-foreground/70 hover:text-eco-500 transition-colors">
-                <Mail className="w-5 h-5 mr-3" />
-                hello@sustainify.com
+              <a href="mailto:hello@eco-navigator.com" className="flex items-center text-foreground/70 hover:text-eco-500 transition-colors">
+                <Mail className="h-4 w-4 mr-2" />
+                hello@eco-navigator.com
               </a>
               <p className="text-muted-foreground">
                 123 Green Street <br />
@@ -134,7 +133,7 @@ const Footer: React.FC = () => {
 
         <div className="mt-12 pt-8 border-t border-border flex flex-col md:flex-row justify-between items-center">
           <p className="text-sm text-muted-foreground mb-4 md:mb-0">
-            © {new Date().getFullYear()} Sustainify. All rights reserved.
+            © {new Date().getFullYear()} Eco-Navigator. All rights reserved.
           </p>
           <div className="flex space-x-6">
             <FooterLink href="#" className="text-sm">Privacy</FooterLink>
