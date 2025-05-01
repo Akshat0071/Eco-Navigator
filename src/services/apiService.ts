@@ -1,7 +1,39 @@
-import { logger } from '../utils/logger';
+import axios from 'axios';
+import { logger } from '@/utils/logger';
 import { ApiResponse } from '../types';
 
-const API_BASE_URL = '/api/ai';
+const API_BASE_URL = process.env.VITE_API_BASE_URL || 'http://localhost:5000/api';
+
+const api = axios.create({
+  baseURL: API_BASE_URL,
+  headers: {
+    'Content-Type': 'application/json',
+  },
+});
+
+// Add request interceptor for logging
+api.interceptors.request.use(
+  (config) => {
+    logger.info(`API Request: ${config.method?.toUpperCase()} ${config.url}`);
+    return config;
+  },
+  (error) => {
+    logger.error('API Request Error:', error);
+    return Promise.reject(error);
+  }
+);
+
+// Add response interceptor for logging
+api.interceptors.response.use(
+  (response) => {
+    logger.info(`API Response: ${response.status} ${response.config.url}`);
+    return response;
+  },
+  (error) => {
+    logger.error('API Response Error:', error);
+    return Promise.reject(error);
+  }
+);
 
 class ApiService {
   private async request<T>(
@@ -105,4 +137,78 @@ class ApiService {
   }
 }
 
-export const apiService = new ApiService(); 
+export const apiService = new ApiService();
+
+// AI Service Functions
+export const generateMealPlan = async (preferences: any) => {
+  try {
+    const response = await api.post('/ai/meal-plan', preferences);
+    return response.data;
+  } catch (error) {
+    logger.error('Error generating meal plan:', error);
+    throw error;
+  }
+};
+
+export const generateWorkoutPlan = async (fitnessLevel: string, goals: string[]) => {
+  try {
+    const response = await api.post('/ai/workout-plan', { fitnessLevel, goals });
+    return response.data;
+  } catch (error) {
+    logger.error('Error generating workout plan:', error);
+    throw error;
+  }
+};
+
+export const getSustainabilityTips = async () => {
+  try {
+    const response = await api.get('/ai/sustainability-tips');
+    return response.data;
+  } catch (error) {
+    logger.error('Error getting sustainability tips:', error);
+    throw error;
+  }
+};
+
+// User Service Functions
+export const register = async (userData: any) => {
+  try {
+    const response = await api.post('/users/register', userData);
+    return response.data;
+  } catch (error) {
+    logger.error('Error registering user:', error);
+    throw error;
+  }
+};
+
+export const login = async (credentials: any) => {
+  try {
+    const response = await api.post('/users/login', credentials);
+    return response.data;
+  } catch (error) {
+    logger.error('Error logging in:', error);
+    throw error;
+  }
+};
+
+export const getProfile = async () => {
+  try {
+    const response = await api.get('/users/profile');
+    return response.data;
+  } catch (error) {
+    logger.error('Error getting profile:', error);
+    throw error;
+  }
+};
+
+export const updateProfile = async (profileData: any) => {
+  try {
+    const response = await api.put('/users/profile', profileData);
+    return response.data;
+  } catch (error) {
+    logger.error('Error updating profile:', error);
+    throw error;
+  }
+};
+
+export default api; 

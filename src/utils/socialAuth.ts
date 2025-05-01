@@ -2,12 +2,13 @@ import { toast } from "sonner";
 import axios from "axios";
 
 // Get environment variables
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+const API_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:3000/api';
 const GOOGLE_CLIENT_ID = import.meta.env.VITE_GOOGLE_CLIENT_ID || '';
 const GITHUB_CLIENT_ID = import.meta.env.VITE_GITHUB_CLIENT_ID || '';
 
 // Log environment variables and configuration
 console.log('Current origin:', window.location.origin);
+console.log('API URL:', API_URL);
 console.log('Google Client ID:', GOOGLE_CLIENT_ID);
 console.log('GitHub Client ID:', GITHUB_CLIENT_ID);
 
@@ -71,7 +72,19 @@ export const initiateGithubAuth = () => {
   window.location.href = authUrl;
 };
 
-export const handleSocialAuthCallback = async (provider: "google" | "github"): Promise<any> => {
+interface AuthResponse {
+  token: string;
+  user: {
+    id: string;
+    email: string;
+    firstName: string;
+    lastName: string;
+    profilePicture: string;
+    isVerified: boolean;
+  };
+}
+
+export const handleSocialAuthCallback = async (provider: "google" | "github"): Promise<AuthResponse> => {
   try {
     const urlParams = new URLSearchParams(window.location.search);
     const code = urlParams.get('code');
@@ -88,33 +101,11 @@ export const handleSocialAuthCallback = async (provider: "google" | "github"): P
     }
 
     console.log(`Processing ${provider} callback with code:`, code);
-    console.log('Sending request to:', `${API_URL}/api/users/auth/${provider}`);
-
-    // Get the current origin
-    const currentOrigin = window.location.origin;
-    console.log('Current origin:', currentOrigin);
+    console.log('Sending request to:', `${API_URL}/auth/${provider}/callback`);
 
     // Send the code to our backend
-    const response = await api.post(`/api/users/auth/${provider}`, { 
-      code,
-      redirectUri: `${currentOrigin}/auth/${provider}/callback`
-    }, {
-      headers: {
-        'Content-Type': 'application/json',
-        'Accept': 'application/json'
-      }
-    }).catch(error => {
-      console.error(`${provider} API error:`, {
-        status: error.response?.status,
-        data: error.response?.data,
-        message: error.message,
-        config: {
-          url: error.config?.url,
-          method: error.config?.method,
-          data: error.config?.data
-        }
-      });
-      throw new Error(error.response?.data?.message || `Failed to authenticate with ${provider}`);
+    const response = await api.post<AuthResponse>(`/auth/${provider}/callback`, { 
+      code
     });
     
     if (!response || !response.data) {
@@ -122,23 +113,37 @@ export const handleSocialAuthCallback = async (provider: "google" | "github"): P
       throw new Error('Invalid response from server');
     }
 
-    if (response.data.token) {
-      console.log('Successfully received token from server');
-      // Store the token in localStorage
-      localStorage.setItem('token', response.data.token);
-      return response.data;
-    } else {
-      console.error('No token in response:', response.data);
-      throw new Error('No token received from server');
+    const { token, user } = response.data;
+
+    if (!token || !user) {
+      console.error('Invalid response data:', response.data);
+      throw new Error('Invalid authentication response');
     }
-  } catch (error) {
+
+    // Ensure profile picture URL is properly formatted
+    if (user.profilePicture) {
+      // For Google, ensure the URL is HTTPS
+      if (provider === 'google' && user.profilePicture.startsWith('http://')) {
+        user.profilePicture = user.profilePicture.replace('http://', 'https://');
+      }
+      // For GitHub, ensure we're using the correct avatar URL format
+      if (provider === 'github' && !user.profilePicture.includes('avatars.githubusercontent.com')) {
+        user.profilePicture = `https://avatars.githubusercontent.com/u/${user.id}?v=4`;
+      }
+    }
+
+    console.log('Successfully received token and user data from server');
+    console.log('User profile picture:', user.profilePicture);
+    
+    // Store the token in localStorage
+    localStorage.setItem('token', token);
+    localStorage.setItem('user', JSON.stringify(user));
+
+    return response.data;
+  } catch (error: any) {
     console.error(`${provider} callback error:`, error);
-    if (axios.isAxiosError(error)) {
-      console.error('Axios error details:', {
-        status: error.response?.status,
-        data: error.response?.data,
-        message: error.message
-      });
+    if (error.response?.data?.error) {
+      throw new Error(error.response.data.error);
     }
     throw error;
   }

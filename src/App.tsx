@@ -26,65 +26,65 @@ const App = () => {
   return (
     <ErrorBoundary>
       <ThemeProvider defaultTheme="system" storageKey="vite-ui-theme">
-        <Router>
-          <AuthProvider>
-            <Layout>
-              <Routes>
-                {/* Public Routes */}
-                <Route path="/" element={<Home />} />
-                <Route path="/login" element={<Login />} />
-                <Route path="/signup" element={<Signup />} />
-                <Route path="/forgot-password" element={<ForgotPassword />} />
-                <Route path="/reset-password" element={<ResetPassword />} />
+      <Router>
+      <AuthProvider>
+          <Layout>
+          <Routes>
+              {/* Public Routes */}
+              <Route path="/" element={<Home />} />
+            <Route path="/login" element={<Login />} />
+              <Route path="/signup" element={<Signup />} />
+              <Route path="/forgot-password" element={<ForgotPassword />} />
+              <Route path="/reset-password" element={<ResetPassword />} />
 
-                {/* Social Auth Callback Routes */}
+              {/* Social Auth Callback Routes */}
                 <Route path="/auth/google/callback" element={<OAuthCallback />} />
                 <Route path="/auth/github/callback" element={<OAuthCallback />} />
 
-                {/* Protected Routes */}
-                <Route
-                  path="/dashboard"
-                  element={
-                    <ProtectedRoute>
-                      <Dashboard />
-                    </ProtectedRoute>
-                  }
-                />
-                <Route
-                  path="/analytics"
-                  element={
-                    <ProtectedRoute>
-                      <Analytics />
-                    </ProtectedRoute>
-                  }
-                />
-                <Route
-                  path="/profile"
-                  element={
-                    <ProtectedRoute>
-                      <Profile />
-                    </ProtectedRoute>
-                  }
-                />
-                <Route
-                  path="/settings"
-                  element={
-                    <ProtectedRoute>
-                      <Settings />
-                    </ProtectedRoute>
-                  }
-                />
+              {/* Protected Routes */}
+              <Route
+                path="/dashboard"
+                element={
+                  <ProtectedRoute>
+                    <Dashboard />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/analytics"
+                element={
+                  <ProtectedRoute>
+                    <Analytics />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/profile"
+                element={
+                  <ProtectedRoute>
+                    <Profile />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/settings"
+                element={
+                  <ProtectedRoute>
+                    <Settings />
+                  </ProtectedRoute>
+                }
+              />
 
-                {/* 404 Route */}
-                <Route path="*" element={<NotFound />} />
-              </Routes>
-            </Layout>
-            <Toaster position="top-right" />
-          </AuthProvider>
-        </Router>
+              {/* 404 Route */}
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+          </Layout>
+          <Toaster position="top-right" />
+      </AuthProvider>
+      </Router>
       </ThemeProvider>
     </ErrorBoundary>
-  );
+);
 };
 
 export default App;

@@ -10,13 +10,16 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { useTheme } from "@/components/theme-provider";
+import { UserAvatar } from "@/components/ui/user-avatar";
 
 const Navbar: React.FC = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();
-  const { user, logout, theme, toggleTheme } = useAuth();
+  const { user, userProfile, logout } = useAuth();
+  const { theme, setTheme } = useTheme();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -34,6 +37,10 @@ const Navbar: React.FC = () => {
   const handleLogout = () => {
     logout();
     navigate("/");
+  };
+
+  const toggleTheme = () => {
+    setTheme(theme === "dark" ? "light" : "dark");
   };
 
   return (
@@ -95,9 +102,12 @@ const Navbar: React.FC = () => {
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button variant="ghost" className="relative h-8 w-8 rounded-full">
-                  <div className="flex items-center justify-center h-8 w-8 rounded-full bg-eco-100 dark:bg-eco-900">
-                    <User className="h-5 w-5 text-eco-600 dark:text-eco-400" />
-                  </div>
+                  <UserAvatar 
+                    src={userProfile?.avatar_url} 
+                    alt={user.name || 'User'}
+                    size="sm"
+                    fallback={<User className="h-5 w-5 text-eco-600 dark:text-eco-400" />}
+                  />
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end" className="w-56">

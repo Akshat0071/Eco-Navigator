@@ -1,38 +1,44 @@
-import { useEffect } from 'react';
-import { useNavigate, useSearchParams } from 'react-router-dom';
-import { handleSocialAuthCallback } from '@/utils/socialAuth';
-import { toast } from 'sonner';
+import React, { useEffect } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
+import axios from 'axios';
+import { useAuth } from '../../contexts/AuthContext';
 
-const GithubCallback = () => {
-  const [searchParams] = useSearchParams();
+const GithubCallback: React.FC = () => {
+  const location = useLocation();
   const navigate = useNavigate();
+  const { login } = useAuth();
 
   useEffect(() => {
     const handleCallback = async () => {
       try {
-        const code = searchParams.get('code');
+        const params = new URLSearchParams(location.search);
+        const code = params.get('code');
+
         if (!code) {
           throw new Error('No authorization code received');
         }
 
-        const user = await handleSocialAuthCallback('github');
-        toast.success('Successfully logged in with GitHub');
+        const response = await axios.post('http://localhost:3000/api/auth/github/callback', {
+          code
+        });
+
+        const { token, user } = response.data;
+        login(token, user);
         navigate('/dashboard');
       } catch (error) {
-        console.error('GitHub callback error:', error);
-        toast.error('Failed to authenticate with GitHub');
-        navigate('/login');
+        console.error('GitHub OAuth error:', error);
+        navigate('/login', { state: { error: 'GitHub authentication failed' } });
       }
     };
 
     handleCallback();
-  }, [searchParams, navigate]);
+  }, [location, navigate, login]);
 
   return (
     <div className="flex items-center justify-center min-h-screen">
       <div className="text-center">
-        <h1 className="text-2xl font-bold mb-4">Completing GitHub Sign In</h1>
-        <p className="text-muted-foreground">Please wait while we process your authentication...</p>
+        <h1 className="text-2xl font-semibold mb-4">Completing GitHub Sign In...</h1>
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-500 mx-auto"></div>
       </div>
     </div>
   );
