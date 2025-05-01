@@ -3,17 +3,17 @@ import TestimonialCard from './TestimonialCard';
 
 const Testimonials: React.FC = () => {
   return (
-    <section id="testimonials" className="py-20 relative overflow-hidden">
+    <section id="testimonials" className="py-20 bg-background/50 dark:bg-background/80 relative overflow-hidden">
       {/* Background Elements */}
-      <div className="absolute top-0 left-0 w-64 h-64 bg-earth-200/50 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-float"></div>
-      <div className="absolute bottom-0 right-0 w-64 h-64 bg-ocean-200/50 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-float animation-delay-2000"></div>
+      <div className="absolute top-0 left-0 w-64 h-64 bg-earth-200/50 dark:bg-earth-900/20 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-float"></div>
+      <div className="absolute bottom-0 right-0 w-64 h-64 bg-ocean-200/50 dark:bg-ocean-900/20 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-float animation-delay-2000"></div>
 
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center max-w-3xl mx-auto mb-16 animate-slide-up">
-          <h2 className="text-3xl font-bold text-center mb-8">
+          <h2 className="text-3xl font-bold text-center mb-8 text-foreground dark:text-white">
             See how Eco-Navigator has helped people transform their health and environmental impact
           </h2>
-          <p className="text-lg text-muted-foreground">
+          <p className="text-lg text-muted-foreground dark:text-gray-300">
             See how Eco-Navigator has helped people transform their health and environmental impact 
             through simple daily habits and smart tracking.
           </p>

@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Button } from '@/components/ui/button';
 import CountUp from './animations/CountUp';
@@ -6,7 +5,7 @@ import { ArrowRight, TreePine, Droplet, Recycle, Leaf } from 'lucide-react';
 
 const SustainabilityStats: React.FC = () => {
   return (
-    <section id="stats" className="py-20 relative overflow-hidden bg-eco-50">
+    <section id="stats" className="py-20 relative overflow-hidden bg-background/50 dark:bg-background/80">
       {/* Background wave pattern */}
       <div className="absolute inset-0 opacity-5 pointer-events-none">
         <svg
@@ -37,10 +36,10 @@ const SustainabilityStats: React.FC = () => {
 
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative">
         <div className="text-center max-w-3xl mx-auto mb-16 animate-slide-up">
-          <h2 className="font-display font-bold mb-4">
+          <h2 className="font-display font-bold mb-4 dark:text-white">
             Our <span className="heading-gradient">Global Impact</span>
           </h2>
-          <p className="text-lg text-muted-foreground">
+          <p className="text-lg text-muted-foreground dark:text-gray-300">
             Together, our community is making a measurable difference. See how small daily 
             habits add up to create significant environmental change.
           </p>
@@ -48,53 +47,53 @@ const SustainabilityStats: React.FC = () => {
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-16">
           <div className="glass-card p-8 text-center animate-scale-up">
-            <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-eco-100 flex items-center justify-center">
-              <TreePine className="w-8 h-8 text-eco-600" />
+            <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-eco-100 dark:bg-eco-900/20 flex items-center justify-center">
+              <TreePine className="w-8 h-8 text-eco-600 dark:text-eco-400" />
             </div>
-            <h3 className="text-3xl font-bold mb-2">
-              <CountUp end={12567} suffix="+" className="text-eco-600" />
+            <h3 className="text-3xl font-bold mb-2 dark:text-white">
+              <CountUp end={12567} suffix="+" className="text-eco-600 dark:text-eco-400" />
             </h3>
-            <p className="text-muted-foreground">Trees Planted</p>
+            <p className="text-muted-foreground dark:text-gray-300">Trees Planted</p>
           </div>
           
           <div className="glass-card p-8 text-center animate-scale-up animation-delay-300">
-            <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-ocean-100 flex items-center justify-center">
-              <Droplet className="w-8 h-8 text-ocean-600" />
+            <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-ocean-100 dark:bg-ocean-900/20 flex items-center justify-center">
+              <Droplet className="w-8 h-8 text-ocean-600 dark:text-ocean-400" />
             </div>
-            <h3 className="text-3xl font-bold mb-2">
-              <CountUp end={4582} suffix="K" className="text-ocean-600" />
+            <h3 className="text-3xl font-bold mb-2 dark:text-white">
+              <CountUp end={4582} suffix="K" className="text-ocean-600 dark:text-ocean-400" />
             </h3>
-            <p className="text-muted-foreground">Liters of Water Saved</p>
+            <p className="text-muted-foreground dark:text-gray-300">Liters of Water Saved</p>
           </div>
           
           <div className="glass-card p-8 text-center animate-scale-up animation-delay-600">
-            <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-earth-100 flex items-center justify-center">
-              <Recycle className="w-8 h-8 text-earth-600" />
+            <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-earth-100 dark:bg-earth-900/20 flex items-center justify-center">
+              <Recycle className="w-8 h-8 text-earth-600 dark:text-earth-400" />
             </div>
-            <h3 className="text-3xl font-bold mb-2">
-              <CountUp end={98752} suffix="kg" className="text-earth-600" />
+            <h3 className="text-3xl font-bold mb-2 dark:text-white">
+              <CountUp end={98752} suffix="kg" className="text-earth-600 dark:text-earth-400" />
             </h3>
-            <p className="text-muted-foreground">Waste Recycled</p>
+            <p className="text-muted-foreground dark:text-gray-300">Waste Recycled</p>
           </div>
           
           <div className="glass-card p-8 text-center animate-scale-up animation-delay-900">
-            <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-eco-100 flex items-center justify-center">
-              <Leaf className="w-8 h-8 text-eco-600" />
+            <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-eco-100 dark:bg-eco-900/20 flex items-center justify-center">
+              <Leaf className="w-8 h-8 text-eco-600 dark:text-eco-400" />
             </div>
-            <h3 className="text-3xl font-bold mb-2">
-              <CountUp end={237891} className="text-eco-600" />
+            <h3 className="text-3xl font-bold mb-2 dark:text-white">
+              <CountUp end={237891} className="text-eco-600 dark:text-eco-400" />
             </h3>
-            <p className="text-muted-foreground">CO₂ Emissions Reduced (kg)</p>
+            <p className="text-muted-foreground dark:text-gray-300">CO₂ Emissions Reduced (kg)</p>
           </div>
         </div>
 
         <div className="glass-card overflow-hidden rounded-3xl animate-slide-up">
           <div className="grid grid-cols-1 lg:grid-cols-2">
-            <div className="p-10 lg:p-12 flex flex-col justify-center">
-              <h3 className="text-2xl md:text-3xl font-semibold mb-4">
+            <div className="p-8 lg:p-12">
+              <h3 className="text-2xl md:text-3xl font-semibold mb-4 dark:text-white">
                 Join Our Growing Community of Eco-Warriors
               </h3>
-              <p className="text-muted-foreground mb-6">
+              <p className="text-muted-foreground dark:text-gray-300 mb-6">
                 Join thousands of users who are making a difference every day. Sign up now to start tracking 
                 your impact and see how your small actions contribute to global change.
               </p>

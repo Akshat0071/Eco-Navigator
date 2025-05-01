@@ -56,4 +56,11 @@ export interface Achievement {
   unlockedAt: Date;
   progress: number;
   target: number;
+}
+
+export interface ApiResponse<T> {
+  data?: T;
+  error?: string;
+  code?: string;
+  retryable?: boolean;
 } 

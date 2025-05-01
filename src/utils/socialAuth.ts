@@ -1,25 +1,24 @@
 import { toast } from "sonner";
-import { User } from "@/services/userService";
+import axios from "axios";
 
-interface SocialAuthConfig {
-  clientId: string;
-  redirectUri: string;
-  scope: string;
-}
+// Get environment variables
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+const GOOGLE_CLIENT_ID = import.meta.env.VITE_GOOGLE_CLIENT_ID || '';
+const GITHUB_CLIENT_ID = import.meta.env.VITE_GITHUB_CLIENT_ID || '';
 
 // Log environment variables and configuration
 console.log('Current origin:', window.location.origin);
-console.log('Google Client ID:', import.meta.env.VITE_GOOGLE_CLIENT_ID);
-console.log('GitHub Client ID:', import.meta.env.VITE_GITHUB_CLIENT_ID);
+console.log('Google Client ID:', GOOGLE_CLIENT_ID);
+console.log('GitHub Client ID:', GITHUB_CLIENT_ID);
 
-const GOOGLE_CONFIG: SocialAuthConfig = {
-  clientId: import.meta.env.VITE_GOOGLE_CLIENT_ID || "",
+const GOOGLE_CONFIG = {
+  clientId: GOOGLE_CLIENT_ID,
   redirectUri: `${window.location.origin}/auth/google/callback`,
   scope: "email profile",
 };
 
-const GITHUB_CONFIG: SocialAuthConfig = {
-  clientId: import.meta.env.VITE_GITHUB_CLIENT_ID || "",
+const GITHUB_CONFIG = {
+  clientId: GITHUB_CLIENT_ID,
   redirectUri: `${window.location.origin}/auth/github/callback`,
   scope: "user:email",
 };
@@ -28,10 +27,19 @@ const GITHUB_CONFIG: SocialAuthConfig = {
 console.log('Google Config:', GOOGLE_CONFIG);
 console.log('GitHub Config:', GITHUB_CONFIG);
 
+// Create axios instance with default config
+const api = axios.create({
+  baseURL: API_URL,
+  timeout: 10000,
+  headers: {
+    'Content-Type': 'application/json',
+  },
+});
+
 export const initiateGoogleAuth = () => {
   if (!GOOGLE_CONFIG.clientId) {
     console.error("Google Client ID is not configured");
-    toast.error("Google authentication is not properly configured");
+    toast.error("Google authentication is not properly configured. Please check your environment variables.");
     return;
   }
 
@@ -50,7 +58,7 @@ export const initiateGoogleAuth = () => {
 export const initiateGithubAuth = () => {
   if (!GITHUB_CONFIG.clientId) {
     console.error("GitHub Client ID is not configured");
-    toast.error("GitHub authentication is not properly configured");
+    toast.error("GitHub authentication is not properly configured. Please check your environment variables.");
     return;
   }
 
@@ -59,55 +67,79 @@ export const initiateGithubAuth = () => {
     `&redirect_uri=${encodeURIComponent(GITHUB_CONFIG.redirectUri)}` +
     `&scope=${encodeURIComponent(GITHUB_CONFIG.scope)}`;
 
+  console.log('Initiating GitHub Auth with URL:', authUrl);
   window.location.href = authUrl;
 };
 
-export const handleSocialAuthCallback = async (provider: "google" | "github"): Promise<User> => {
-  console.log('Handling social auth callback for provider:', provider);
-  console.log('Current URL:', window.location.href);
-  
-  const urlParams = new URLSearchParams(window.location.search);
-  const code = urlParams.get("code");
-  const error = urlParams.get("error");
-  const errorDescription = urlParams.get("error_description");
-
-  console.log('URL Parameters:', {
-    code: code ? 'present' : 'missing',
-    error,
-    errorDescription
-  });
-
-  if (error) {
-    console.error("OAuth error:", error, errorDescription);
-    throw new Error(errorDescription || error);
-  }
-
-  if (!code) {
-    console.error("No authorization code received");
-    throw new Error("No authorization code received");
-  }
-
+export const handleSocialAuthCallback = async (provider: "google" | "github"): Promise<any> => {
   try {
-    // For development/testing, we'll simulate a successful authentication
-    // In a real app, you would send this code to your backend
-    const now = new Date();
-    const mockUserData: User = {
-      _id: crypto.randomUUID(),
-      email: "test@example.com",
-      name: "Test User",
-      provider: provider,
-      createdAt: now,
-      updatedAt: now
-    };
+    const urlParams = new URLSearchParams(window.location.search);
+    const code = urlParams.get('code');
+    const error = urlParams.get('error');
 
-    console.log('Simulating successful authentication with data:', mockUserData);
+    if (error) {
+      console.error(`${provider} OAuth error:`, error);
+      throw new Error(`OAuth error: ${error}`);
+    }
+
+    if (!code) {
+      console.error('No authorization code found in URL');
+      throw new Error('No authorization code received');
+    }
+
+    console.log(`Processing ${provider} callback with code:`, code);
+    console.log('Sending request to:', `${API_URL}/api/users/auth/${provider}`);
+
+    // Get the current origin
+    const currentOrigin = window.location.origin;
+    console.log('Current origin:', currentOrigin);
+
+    // Send the code to our backend
+    const response = await api.post(`/api/users/auth/${provider}`, { 
+      code,
+      redirectUri: `${currentOrigin}/auth/${provider}/callback`
+    }, {
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
+      }
+    }).catch(error => {
+      console.error(`${provider} API error:`, {
+        status: error.response?.status,
+        data: error.response?.data,
+        message: error.message,
+        config: {
+          url: error.config?.url,
+          method: error.config?.method,
+          data: error.config?.data
+        }
+      });
+      throw new Error(error.response?.data?.message || `Failed to authenticate with ${provider}`);
+    });
     
-    // Simulate API delay
-    await new Promise(resolve => setTimeout(resolve, 1000));
+    if (!response || !response.data) {
+      console.error('Invalid response from server');
+      throw new Error('Invalid response from server');
+    }
 
-    return mockUserData;
+    if (response.data.token) {
+      console.log('Successfully received token from server');
+      // Store the token in localStorage
+      localStorage.setItem('token', response.data.token);
+      return response.data;
+    } else {
+      console.error('No token in response:', response.data);
+      throw new Error('No token received from server');
+    }
   } catch (error) {
-    console.error("Authentication error:", error);
+    console.error(`${provider} callback error:`, error);
+    if (axios.isAxiosError(error)) {
+      console.error('Axios error details:', {
+        status: error.response?.status,
+        data: error.response?.data,
+        message: error.message
+      });
+    }
     throw error;
   }
 };

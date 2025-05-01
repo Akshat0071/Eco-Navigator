@@ -21,7 +21,7 @@ const FooterLink: React.FC<{ href: string; children: React.ReactNode; className?
 
 const Footer: React.FC = () => {
   return (
-    <footer className="relative pt-16 pb-8 overflow-hidden">
+    <footer className="relative pt-16 pb-8 overflow-hidden bg-background/50 dark:bg-background/80">
       <div className="absolute inset-0 pointer-events-none opacity-5">
         <svg
           width="100%"
@@ -43,10 +43,10 @@ const Footer: React.FC = () => {
         <div className="glass-card p-8 md:p-10 lg:p-12 mb-12 animate-scale-up">
           <div className="grid grid-cols-1 md:grid-cols-2 items-center gap-8">
             <div>
-              <h3 className="text-2xl md:text-3xl font-semibold mb-4">
+              <h3 className="text-2xl md:text-3xl font-semibold mb-4 dark:text-white">
                 Stay updated with our newsletter
               </h3>
-              <p className="text-muted-foreground mb-6 md:mb-0">
+              <p className="text-muted-foreground dark:text-gray-300 mb-6 md:mb-0">
                 Get the latest tips, updates, and eco-challenges delivered to your inbox.
               </p>
             </div>
@@ -70,7 +70,7 @@ const Footer: React.FC = () => {
               <Leaf className="h-8 w-8 text-eco-500 mr-2" />
               <span className="text-2xl font-display font-bold bg-gradient-to-r from-eco-600 to-eco-400 bg-clip-text text-transparent">Eco-Navigator</span>
             </div>
-            <p className="text-muted-foreground mb-6">
+            <p className="text-muted-foreground dark:text-gray-300 mb-6">
               The all-in-one platform for tracking your health, sustainability efforts, 
               and making a positive impact on the planet.
             </p>
@@ -91,7 +91,7 @@ const Footer: React.FC = () => {
           </div>
 
           <div>
-            <h4 className="font-semibold text-lg mb-6">Features</h4>
+            <h4 className="font-semibold text-lg mb-6 dark:text-white">Features</h4>
             <ul className="space-y-4">
               <li><FooterLink href="#">Health Tracking</FooterLink></li>
               <li><FooterLink href="#">Eco-Habits Monitoring</FooterLink></li>
@@ -102,7 +102,7 @@ const Footer: React.FC = () => {
           </div>
 
           <div>
-            <h4 className="font-semibold text-lg mb-6">Resources</h4>
+            <h4 className="font-semibold text-lg mb-6 dark:text-white">Resources</h4>
             <ul className="space-y-4">
               <li><FooterLink href="#">Blog</FooterLink></li>
               <li><FooterLink href="#">Help Center</FooterLink></li>
@@ -113,13 +113,13 @@ const Footer: React.FC = () => {
           </div>
 
           <div>
-            <h4 className="font-semibold text-lg mb-6">Contact</h4>
+            <h4 className="font-semibold text-lg mb-6 dark:text-white">Contact</h4>
             <div className="space-y-4">
-              <a href="mailto:hello@eco-navigator.com" className="flex items-center text-foreground/70 hover:text-eco-500 transition-colors">
+              <a href="mailto:hello@eco-navigator.com" className="flex items-center text-foreground/70 dark:text-gray-300 hover:text-eco-500 transition-colors">
                 <Mail className="h-4 w-4 mr-2" />
                 hello@eco-navigator.com
               </a>
-              <p className="text-muted-foreground">
+              <p className="text-muted-foreground dark:text-gray-300">
                 123 Green Street <br />
                 Eco City, EC 12345 <br />
                 United States
@@ -132,7 +132,7 @@ const Footer: React.FC = () => {
         </div>
 
         <div className="mt-12 pt-8 border-t border-border flex flex-col md:flex-row justify-between items-center">
-          <p className="text-sm text-muted-foreground mb-4 md:mb-0">
+          <p className="text-sm text-muted-foreground dark:text-gray-300 mb-4 md:mb-0">
             © {new Date().getFullYear()} Eco-Navigator. All rights reserved.
           </p>
           <div className="flex space-x-6">

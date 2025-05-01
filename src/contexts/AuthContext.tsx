@@ -49,7 +49,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     };
   } | null>(null);
   const navigate = useNavigate();
-
+  
   useEffect(() => {
     // Check for existing session in localStorage
     const storedUser = localStorage.getItem('user');
@@ -64,10 +64,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     
     setLoading(false);
   }, []);
-
+  
   const handleSocialLogin = async (userData: User) => {
     try {
-      setUser(userData);
+    setUser(userData);
       localStorage.setItem('user', JSON.stringify(userData));
       
       // Create or update user profile
@@ -151,12 +151,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       throw error;
     }
   };
-
+  
   const logout = async () => {
     try {
-      setUser(null);
+    setUser(null);
       setUserProfile(null);
-      localStorage.removeItem('user');
+    localStorage.removeItem('user');
       localStorage.removeItem('userProfile');
       navigate('/');
     } catch (error) {
@@ -226,10 +226,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   const value = {
-    user,
+      user, 
     loading,
     signUp,
-    login,
+      login, 
     logout,
     resetPassword,
     updatePassword,
